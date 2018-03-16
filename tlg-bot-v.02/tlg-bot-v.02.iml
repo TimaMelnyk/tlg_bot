@@ -7,7 +7,7 @@
           <unit-entry name="hibernate.cfg.xml" />
         </datasource-map>
         <naming-strategy-map />
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/java/hibernate.cfg.xml" />
+        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/resources/hibernate.cfg.xml" />
       </configuration>
     </facet>
   </component>
@@ -23,9 +23,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="telegrambots-3.4-jar-with-dependencies" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.34" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:${hibernate-version}" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:${hibernate-version}" level="project" />
     <orderEntry type="library" name="Hibernate 5.2.14-5.2.14" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.34" level="project" />
   </component>
 </module>
