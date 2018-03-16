@@ -2,28 +2,28 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
+.*/workspace.xml
+.*/tasks.xml
+tlg-bot-v.02/.idea/dictionaries
 
 # Sensitive or high-churn files:
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
+tlg-bot-v.02/.idea/**/dataSources/
+tlg-bot-v.02/.idea/**/dataSources.ids
+tlg-bot-v.02/.idea/**/dataSources.local.xml
+tlg-bot-v.02/.idea/**/sqlDataSources.xml
+tlg-bot-v.02/.idea/**/dynamic.xml
+tlg-bot-v.02/.idea/**/uiDesigner.xml
 
 # Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
+tlg-bot-v.02/.idea/**/gradle.xml
+tlg-bot-v.02/.idea/**/libraries
 
 # CMake
-cmake-build-debug/
-cmake-build-release/
+tlg-bot-v.02/cmake-build-debug/
+tlg-bot-v.02/cmake-build-release/
 
 # Mongo Explorer plugin:
-.idea/**/mongoSettings.xml
+tlg-bot-v.02/.idea/**/mongoSettings.xml
 
 ## File-based project format:
 *.iws
@@ -34,13 +34,13 @@ cmake-build-release/
 out/
 
 # mpeltonen/sbt-idea plugin
-.idea_modules/
+tlg-bot-v.02/.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
-.idea/replstate.xml
+tlg-bot-v.02/.idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
