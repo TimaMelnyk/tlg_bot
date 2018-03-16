@@ -11,7 +11,6 @@ import javax.persistence.metamodel.EntityType;
  */
 public class Main {
 
-
     public static Session getSession() throws HibernateException {
         return HibernateUtil.getSessionFactory().openSession();
     }
