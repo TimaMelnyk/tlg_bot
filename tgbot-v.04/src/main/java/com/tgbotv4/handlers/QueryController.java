@@ -3,9 +3,8 @@ package com.tgbotv4.handlers;
 import com.tgbotv4.conf.MenuBut;
 import com.tgbotv4.handlers.handlerServices.BuyService;
 import com.tgbotv4.handlers.handlerServices.MessageParser;
-import com.tgbotv4.persistence.entities.ChannelInfo;
+import com.tgbotv4.handlers.handlerServices.ShowChannels;
 import com.tgbotv4.services.CategoriesService;
-import com.tgbotv4.services.ChannelInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -30,9 +29,9 @@ public class QueryController {
     @Autowired
     BuyService buyService;
     @Autowired
-    ChannelInfoService channelInfoService;
-    @Autowired
     CategoriesService categoriesService;
+    @Autowired
+    ShowChannels showChannels;
 
 
     public EditMessageText handleIncomingMessage(Update update, EditMessageText editMessageText) {
@@ -44,37 +43,28 @@ public class QueryController {
         long chat_id = update.getCallbackQuery().getMessage().getChatId();
         int currState = messageParser.currState;
 
+        editMessageText
+                .setChatId(chat_id)
+                .setMessageId(toIntExact(message_id));
+
         switch (currState) {
             case MenuBut.BUYAD_FILTER_CATEGORY:
                 if(categoriesService.categoryExist(Integer.parseInt(call_data))){
-                    System.out.println("hello category");
-                    List<InlineKeyboardButton> rowInline = new ArrayList<>();
+/*                    List<InlineKeyboardButton> rowInline = new ArrayList<>();
                     rowInline.add(new InlineKeyboardButton()
                             .setText("twerk")
                             .setCallbackData("twerk"));
                     rowsInline.add(rowInline);
 
-                    markupInline.setKeyboard(rowsInline);
-                    String answer = "";
-                    int counter = 1;
-                    List<ChannelInfo> channelInfos = channelInfoService.getChannelInfoByCategory(Integer.valueOf(call_data));
-                    for(ChannelInfo i : channelInfos) {
-                        answer+= counter + ". "
-                                + i.getChannelName() + "\n"
-                                + i.getChannelUrl() + "\n"
-                                + i.getChannelDescriptione() + "\n";
-                        counter++;
-                    }
+                    markupInline.setKeyboard(rowsInline);*/
                     editMessageText
-                            .setChatId(chat_id)
-                            .setMessageId(toIntExact(message_id))
-                            .setText(answer)
-                            .setReplyMarkup(markupInline);
+                            .setText(showChannels.showChannelsByCategory(Integer.parseInt(call_data)))
+                            .setReplyMarkup(markupInline)
+                            .disableWebPagePreview();
                     return editMessageText;
                 }else
                     break;
             case 32: break;
-
             case 33: break;
             case 34: break;
             case MenuBut.BACK:

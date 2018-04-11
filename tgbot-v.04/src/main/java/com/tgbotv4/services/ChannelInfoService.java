@@ -22,5 +22,8 @@ public class ChannelInfoService {
     public List<ChannelInfo> getChannelInfoByCategory (Integer category) {
         return channelInfoRepository.findByChannelCategory(category);
     }
+    public ChannelInfo getChannelInfoById(Integer id) {
+        return channelInfoRepository.findById(id).get();
+    }
 
 }

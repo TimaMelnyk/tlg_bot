@@ -17,7 +17,7 @@ public class MenuBut {
     public static final int BUYAD_FILTER_LOCATION = 32;
     public static final int BUYAD_FILTER_QUANTITY = 33;
     public static final int BUYAD_FILTER_TOP = 34;
-
+    public static final int SHOW_CHANNEL_INFO = 30;
 
     public static final int SELLAD = 2;
 

@@ -5,6 +5,7 @@ import com.tgbotv4.conf.BotTextMessage;
 import com.tgbotv4.conf.MenuBut;
 import com.tgbotv4.handlers.handlerServices.BuyService;
 import com.tgbotv4.handlers.handlerServices.MessageParser;
+import com.tgbotv4.handlers.handlerServices.ShowChannels;
 import com.tgbotv4.handlers.handlerServices.WelcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,8 @@ public class MessageController {
     WelcomeService welcomeService;
     @Autowired
     BuyService buyService;
+    @Autowired
+    ShowChannels showChannels;
 
     public SendMessage handleIncomingMessage(Message message, ReplyKeyboardMarkup keyboardMarkup) throws TelegramApiException {
 
@@ -39,7 +42,9 @@ public class MessageController {
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
         sendMessage.setChatId(message.getChatId().toString());
-        int state = messageParser.commandParser(message);
+
+
+        int state = messageParser.commandParser(message);//        этот метод стоит убрать(лишние действия)
 
         switch (state) {
             case MenuBut.WELCOME:
@@ -87,9 +92,11 @@ public class MessageController {
                 sendMessage.setText("here i get all top channels from db and put one by one");
 //                return buyService.topChannelList();
                 break;
+            case MenuBut.SHOW_CHANNEL_INFO:
+                int id = messageParser.getChannelIdToShow(message);
+                return showChannels.showChannel(sendMessage, id);
             default:
-                System.out.println("hello");
-                return sendMessage;
+                return sendMessage.setText("hello");
         }
         return sendMessage;
     }

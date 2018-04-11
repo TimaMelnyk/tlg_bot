@@ -3,6 +3,9 @@ package com.tgbotv4.handlers.handlerServices;
 import com.tgbotv4.conf.BotTextMessage;
 import com.tgbotv4.conf.MenuBut;
 import com.tgbotv4.persistence.repositories.CategoriesRepository;
+import com.tgbotv4.services.ChannelInfoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
@@ -15,51 +18,62 @@ import org.telegram.telegrambots.api.objects.Message;
 public class MessageParser {
     @Autowired
     CategoriesRepository categoriesRepository;
+    @Autowired
+    ChannelInfoService channelInfoService;
 
     public int currState;
+    private static final Logger logger = LogManager.getLogger(MessageParser.class);
 
     public int commandParser(Message message) {
         int state;
+        String str = message.getText();
         if (message.getText().equals(BotTextMessage.BUYAD)) {
             currState = MenuBut.BUYAD;
             return currState;
         }
         if (message.getText().equals(BotTextMessage.SELLAD)) {
             currState = MenuBut.SELLAD;
-            return currState ;
+            return currState;
         }
         if (message.getText().equals(BotTextMessage.BUYAD_FILTER_CATEGORY)) {
             currState = MenuBut.BUYAD_FILTER_CATEGORY;
-            return currState ;
+            return currState;
         }
         if (message.getText().equals(BotTextMessage.BUYAD_FILTER_LOCATION)) {
             currState = MenuBut.BUYAD_FILTER_LOCATION;
-            return currState ;
+            return currState;
         }
         if (message.getText().equals(BotTextMessage.BUYAD_FILTER_QUANTITY)) {
             currState = MenuBut.BUYAD_FILTER_QUANTITY;
-            return currState ;
+            return currState;
         }
         if (message.getText().equals(BotTextMessage.BUYAD_FILTER_TOP)) {
             currState = MenuBut.BUYAD_FILTER_TOP;
-            return currState ;
+            return currState;
         }
-        if (message.getText().equals(BotTextMessage.BACK))
-        {
-            if (currState>=2 && currState<6) {
+        if (message.getText().equals(BotTextMessage.BACK)) {
+            if (currState >= 2 && currState < 6) {
                 return MenuBut.WELCOME;
-            }
-            else {
+            } else {
                 return MenuBut.BACK;
             }
         }
-        if (message.getText().equals("/start"))
-        {
+        if (message.getText().toLowerCase().contains("/showInfo".toLowerCase())) {
+            str = str.substring(str.length() - 2);
+            System.out.println("channelInfo" + str);
+            return MenuBut.SHOW_CHANNEL_INFO;
+        }
+        if (message.getText().equals("/start")) {
             currState = 1;
             return MenuBut.WELCOME;
-        }
-        else state = 404;
-
+        } else state = 404;
+        logger.info(state);
         return state;
     }
+
+    public int getChannelIdToShow(Message message){
+        String str = message.getText();
+        return Integer.parseInt(str.replaceAll("\\D+",""));
+    }
+
 }
