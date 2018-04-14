@@ -5,6 +5,10 @@ import com.tgbotv4.conf.BotConfigurations;
 import com.tgbotv4.handlers.MessageController;
 import com.tgbotv4.handlers.QueryController;
 import com.tgbotv4.handlers.handlerServices.BuyService;
+import com.tgbotv4.services.CategoriesService;
+import com.tgbotv4.services.ChannelInfoService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -19,6 +23,10 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 /**
@@ -33,7 +41,11 @@ public class BotInitializer extends TelegramLongPollingBot {
     QueryController queryController;
     @Autowired
     BuyService buyService;
-
+    @Autowired
+    ChannelInfoService channelInfoService;
+    @Autowired
+    CategoriesService categoriesService;
+    private static final Logger logger = LogManager.getLogger(QueryController.class);
     static {
         ApiContextInitializer.init();
     }
@@ -54,8 +66,37 @@ public class BotInitializer extends TelegramLongPollingBot {
         }
     }
 
+    static String readFile(String path, Charset encoding)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
+    }
+
     public void onUpdateReceived(Update update) {
         try {
+           /* String str = readFile("C:/Users/yaoun/Desktop/tg_stat.json", StandardCharsets.UTF_8);
+
+            JSONObject obj = new JSONObject(str.substring(str.indexOf('{')));
+            ChannelInfo channelInfo;
+            Categories categories;
+
+            JSONArray arr = obj.getJSONObject("items").getJSONArray("list");
+            for (int i = 0; i < arr.length(); i++)
+            {
+                categories = new Categories();
+                categories.setCategoryName(arr.getJSONObject(i).getString("category"));
+                categoriesService.setCategory(categories);
+                List<Categories> categories1 = categoriesService.getCategories();
+                channelInfo = new ChannelInfo();
+                channelInfo.setChannelUrl("@"+arr.getJSONObject(i).getString("username"));
+                channelInfo.setChannelName(arr.getJSONObject(i).getString("title"));
+                channelInfo.setChannelDescriptione("Мы предлагаем Вам открывать новые грани Киева и отбираем лучшие мероприятия для отдыха и развития.Связь: @glorymlory @spacef");
+                channelInfo.setChannelCategory(categories1.get(i%21).getId());
+                channelInfo.setChannelSubscribers(arr.getJSONObject(i).getInt("members"));
+                channelInfoService.setChannelInfo(channelInfo);
+            }*/
+
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message message = update.getMessage();
 

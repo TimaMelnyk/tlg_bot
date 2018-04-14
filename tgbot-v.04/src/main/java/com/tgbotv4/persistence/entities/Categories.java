@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "categories_info")
+@Table(name = "categories")
 public class Categories {
 
     @Id

@@ -5,6 +5,8 @@ import com.tgbotv4.handlers.handlerServices.BuyService;
 import com.tgbotv4.handlers.handlerServices.MessageParser;
 import com.tgbotv4.handlers.handlerServices.ShowChannels;
 import com.tgbotv4.services.CategoriesService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -33,6 +35,7 @@ public class QueryController {
     @Autowired
     ShowChannels showChannels;
 
+    private static final Logger logger = LogManager.getLogger(QueryController.class);
 
     public EditMessageText handleIncomingMessage(Update update, EditMessageText editMessageText) {
 
@@ -41,29 +44,27 @@ public class QueryController {
         String call_data = update.getCallbackQuery().getData();
         long message_id = update.getCallbackQuery().getMessage().getMessageId();
         long chat_id = update.getCallbackQuery().getMessage().getChatId();
-        int currState = messageParser.currState;
-
+        int currState = messageParser.queryParser(call_data);
+        int currPage = messageParser.getPageId(call_data);
+        int categoryId = messageParser.getCategoryId(call_data);
+        logger.info("current page : " + currPage );
         editMessageText
                 .setChatId(chat_id)
                 .setMessageId(toIntExact(message_id));
 
         switch (currState) {
             case MenuBut.BUYAD_FILTER_CATEGORY:
-                if(categoriesService.categoryExist(Integer.parseInt(call_data))){
-/*                    List<InlineKeyboardButton> rowInline = new ArrayList<>();
-                    rowInline.add(new InlineKeyboardButton()
-                            .setText("twerk")
-                            .setCallbackData("twerk"));
-                    rowsInline.add(rowInline);
+                    List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-                    markupInline.setKeyboard(rowsInline);*/
                     editMessageText
-                            .setText(showChannels.showChannelsByCategory(Integer.parseInt(call_data)))
-                            .setReplyMarkup(markupInline)
+                            .setText(showChannels.showChannelsByCategory(categoryId, currPage))
                             .disableWebPagePreview();
+                    rowsInline.add(showChannels.getListOfCurrentPages(rowInline, currPage, categoryId));
+                    markupInline.setKeyboard(rowsInline);
+                    editMessageText
+                            .setReplyMarkup(markupInline);
+
                     return editMessageText;
-                }else
-                    break;
             case 32: break;
             case 33: break;
             case 34: break;
@@ -71,6 +72,10 @@ public class QueryController {
 
                 return editMessageText;
             default:
+                editMessageText
+                        .setChatId(chat_id)
+                        .setMessageId(toIntExact(message_id))
+                        .setText("something went wrong :(");
                 return editMessageText;
         }
         return editMessageText;

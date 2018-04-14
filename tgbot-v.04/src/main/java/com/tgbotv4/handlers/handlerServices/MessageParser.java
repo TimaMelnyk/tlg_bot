@@ -20,8 +20,8 @@ public class MessageParser {
     CategoriesRepository categoriesRepository;
     @Autowired
     ChannelInfoService channelInfoService;
-
     public int currState;
+
     private static final Logger logger = LogManager.getLogger(MessageParser.class);
 
     public int commandParser(Message message) {
@@ -76,4 +76,25 @@ public class MessageParser {
         return Integer.parseInt(str.replaceAll("\\D+",""));
     }
 
+    public int getCategoryId(String message){
+        if(message.toLowerCase().contains("page")) {
+            return Integer.parseInt(message.split("[.]")[0].replaceAll("\\D+",""));
+        }
+        return Integer.parseInt(message.replaceAll("\\D+",""));
+    }
+
+    public int getPageId(String message){
+        if(!message.toLowerCase().contains("page")) {
+            return 0;
+        }else
+        return Integer.parseInt(message.split("[.]")[1].replaceAll("\\D+",""));
+    }
+
+    public int queryParser(String message){
+        if(message.toLowerCase().contains("category")) {
+            return MenuBut.BUYAD_FILTER_CATEGORY;
+        }
+
+        return 404;
+    }
 }

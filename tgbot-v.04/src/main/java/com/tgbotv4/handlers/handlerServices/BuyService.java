@@ -42,10 +42,10 @@ public class BuyService {
 
         List<InlineKeyboardButton> rowIn;
         for(Categories category : categories) {
-            rowIn = new ArrayList<InlineKeyboardButton>();
+            rowIn = new ArrayList<>();
             rowIn.add(new InlineKeyboardButton()
                     .setText(category.getCategoryName())
-                    .setCallbackData(category.getId().toString()));
+                    .setCallbackData("category" + category.getId().toString()));
             rowsInline.add(rowIn);
         }
         markupInline.setKeyboard(rowsInline);

@@ -22,4 +22,14 @@ public class CategoriesService {@Autowired
     public List<Categories> getCategories() {
         return categoriesRepository.findAll();
     }
+
+    public void setCategory (Categories category) {
+        List<Categories> categories = categoriesRepository.findAll();
+        boolean state = false;
+        for(int i =0;i<categories.size();i++) {
+            if (categories.get(i).getCategoryName().equals(category.getCategoryName()))
+                state = true;
+        }
+        if(!state) {categoriesRepository.save(category); }
+    }
  }
