@@ -47,10 +47,15 @@ public class MessageParser {
             currState = MenuBut.BUYAD_FILTER_QUANTITY;
             return currState;
         }
-        if (message.getText().equals(BotTextMessage.BUYAD_FILTER_TOP)) {
-            currState = MenuBut.BUYAD_FILTER_TOP;
+        if (message.getText().startsWith("@")) {
+            currState = MenuBut.BUYAD_FILTER_SEARCH;
             return currState;
         }
+        if (message.getText().equals(BotTextMessage.BUYAD_FILTER_SEARCH)) {
+            currState = MenuBut.BUYAD_FILTER_SEARCH;
+            return currState;
+        }
+
         if (message.getText().equals(BotTextMessage.BACK)) {
             if (currState >= 2 && currState < 6) {
                 return MenuBut.WELCOME;
@@ -83,6 +88,13 @@ public class MessageParser {
         return Integer.parseInt(message.replaceAll("\\D+",""));
     }
 
+    public String getSearchStr(String message){
+        if(message.toLowerCase().contains("search")) {
+            return message.substring(message.indexOf("@")+1, message.indexOf("."));
+        }else
+        return "nothing";
+    }
+
     public int getPageId(String message){
         if(!message.toLowerCase().contains("page")) {
             return 0;
@@ -94,7 +106,17 @@ public class MessageParser {
         if(message.toLowerCase().contains("category")) {
             return MenuBut.BUYAD_FILTER_CATEGORY;
         }
-
+        if(message.toLowerCase().contains("search")) {
+            return MenuBut.BUYAD_FILTER_SEARCH;
+        }
         return 404;
+    }
+
+    public boolean validateSearchQuery (String message) {
+        if (message.split("[@]")[1].length() >= 1 && message.length() <= 32) {
+            return true;
+        }
+        else
+            return false;
     }
 }

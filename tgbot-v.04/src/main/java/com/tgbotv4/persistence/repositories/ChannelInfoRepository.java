@@ -11,5 +11,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface ChannelInfoRepository extends PagingAndSortingRepository<ChannelInfo, Integer> {
     Page<ChannelInfo> findByChannelCategory(Integer category, Pageable pageable);
+    Page<ChannelInfo> findByChannelUrlContaining(String str, Pageable pageable);
 
 }

@@ -26,7 +26,7 @@ public class ChannelInfo {
     private String channelUrl;
 
     @Column(name = "channel_description", length = 256)
-    private String channelDescriptione;
+    private String channelDescription;
 
     @Column(name = "channel_category")
     private Integer channelCategory;

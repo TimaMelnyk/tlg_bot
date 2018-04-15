@@ -4,9 +4,6 @@ package com.tgbotv4;
 import com.tgbotv4.conf.BotConfigurations;
 import com.tgbotv4.handlers.MessageController;
 import com.tgbotv4.handlers.QueryController;
-import com.tgbotv4.handlers.handlerServices.BuyService;
-import com.tgbotv4.services.CategoriesService;
-import com.tgbotv4.services.ChannelInfoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +36,7 @@ public class BotInitializer extends TelegramLongPollingBot {
     MessageController messageController;
     @Autowired
     QueryController queryController;
-    @Autowired
-    BuyService buyService;
-    @Autowired
-    ChannelInfoService channelInfoService;
-    @Autowired
-    CategoriesService categoriesService;
+
     private static final Logger logger = LogManager.getLogger(QueryController.class);
     static {
         ApiContextInitializer.init();

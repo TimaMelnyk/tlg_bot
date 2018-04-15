@@ -33,4 +33,7 @@ public class ChannelInfoService {
         channelInfoRepository.save(channelInfo);
     }
 
+    public Page<ChannelInfo> searchForChannelInfo(String str, Pageable pageable) {
+        return channelInfoRepository.findByChannelUrlContaining(str, pageable);
+    }
 }

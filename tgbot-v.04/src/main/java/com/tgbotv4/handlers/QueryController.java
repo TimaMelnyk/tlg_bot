@@ -4,10 +4,14 @@ import com.tgbotv4.conf.MenuBut;
 import com.tgbotv4.handlers.handlerServices.BuyService;
 import com.tgbotv4.handlers.handlerServices.MessageParser;
 import com.tgbotv4.handlers.handlerServices.ShowChannels;
+import com.tgbotv4.persistence.entities.ChannelInfo;
 import com.tgbotv4.services.CategoriesService;
+import com.tgbotv4.services.ChannelInfoService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.updatingmessages.EditMessageText;
@@ -34,6 +38,8 @@ public class QueryController {
     CategoriesService categoriesService;
     @Autowired
     ShowChannels showChannels;
+    @Autowired
+    ChannelInfoService channelInfoService;
 
     private static final Logger logger = LogManager.getLogger(QueryController.class);
 
@@ -46,28 +52,47 @@ public class QueryController {
         long chat_id = update.getCallbackQuery().getMessage().getChatId();
         int currState = messageParser.queryParser(call_data);
         int currPage = messageParser.getPageId(call_data);
-        int categoryId = messageParser.getCategoryId(call_data);
-        logger.info("current page : " + currPage );
+
         editMessageText
                 .setChatId(chat_id)
                 .setMessageId(toIntExact(message_id));
 
         switch (currState) {
-            case MenuBut.BUYAD_FILTER_CATEGORY:
-                    List<InlineKeyboardButton> rowInline = new ArrayList<>();
+            case MenuBut.BUYAD_FILTER_CATEGORY: {
+                int categoryId = messageParser.getCategoryId(call_data);
+                Page<ChannelInfo> channelInfos = channelInfoService.getChannelInfoByCategory(categoryId, PageRequest.of(currPage, 10));
+                List<InlineKeyboardButton> rowInline = new ArrayList<>();
+                String filterType = "category" + categoryId; // here i set filter type (that help me to figure out which case to use)
+                editMessageText
+                        .setText(showChannels.showChannels(channelInfos, currPage))
+                        .disableWebPagePreview();
+                rowsInline.add(showChannels.getListOfCurrentPages(rowInline, currPage, filterType));
+                markupInline.setKeyboard(rowsInline);
+                editMessageText
+                        .setReplyMarkup(markupInline);
 
-                    editMessageText
-                            .setText(showChannels.showChannelsByCategory(categoryId, currPage))
-                            .disableWebPagePreview();
-                    rowsInline.add(showChannels.getListOfCurrentPages(rowInline, currPage, categoryId));
-                    markupInline.setKeyboard(rowsInline);
-                    editMessageText
-                            .setReplyMarkup(markupInline);
+                return editMessageText;
+            }
+            case MenuBut.BUYAD_FILTER_SEARCH: {
+                String searchStr = messageParser.getSearchStr(call_data);
+                Page<ChannelInfo> channelInfos = channelInfoService.searchForChannelInfo(searchStr, PageRequest.of(currPage, 10));
+                List<InlineKeyboardButton> rowInline = new ArrayList<>();
+                String filterType = "search@" + searchStr; // here i set filter type (that help me to figure out which case to use)
+                showChannels.setTotalPages(channelInfos.getTotalPages());
+                rowsInline.add(showChannels.getListOfCurrentPages(rowInline, currPage, filterType));
+                markupInline.setKeyboard(rowsInline);
 
-                    return editMessageText;
-            case 32: break;
-            case 33: break;
-            case 34: break;
+                editMessageText
+                        .setText(showChannels.showChannels(channelInfos, currPage))
+                        .disableWebPagePreview()
+                        .setReplyMarkup(markupInline);
+
+                return editMessageText;
+            }
+            case 33:
+                break;
+            case 34:
+                break;
             case MenuBut.BACK:
 
                 return editMessageText;
@@ -81,9 +106,9 @@ public class QueryController {
         return editMessageText;
     }
 
-    public SendMessage goBack(Message message){
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(message.getChatId().toString());
-            return buyService.categoriesList(sendMessage);
-        }
+    public SendMessage goBack(Message message) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(message.getChatId().toString());
+        return buyService.categoriesList(sendMessage);
+    }
 }
