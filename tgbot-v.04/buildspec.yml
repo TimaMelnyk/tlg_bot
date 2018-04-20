@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mvn clean package --batch-mode -DskipTests
+artifacts:
+  files:
+    - target/tgbot-v.04-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
