@@ -91,7 +91,8 @@ public class BotInitializer extends TelegramLongPollingBot {
 
             if (update.hasMessage() && update.getMessage().hasText()) {
                 Message message = update.getMessage();
-
+//                DefaultBotOptions defaultBotOptions = new DefaultBotOptions();
+//                defaultBotOptions.setBaseUrl("");
                 ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
                 keyboardMarkup.setResizeKeyboard(true);
                 if (message.hasText() || message.hasLocation()) {
